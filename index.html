@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Time-Waster Hub</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --surface: #151922;
+      --border: #232936;
+      --text: #ffffff;
+      --cyan: #00ffcc;
+      --pink: #ff007f;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      background: rgba(21, 25, 34, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo span {
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+      display: none;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+    }
+
+    /* Main Content Area */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Home View */
+    #home-view {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      width: 100%;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      color: #8892b0;
+      font-size: 1.2rem;
+    }
+
+    /* Game Cards Grid */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .game-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: var(--accent);
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+    }
+
+    .game-card h2 {
+      font-size: 1.5rem;
+    }
+
+    .game-card p {
+      color: #8892b0;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .play-btn {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 12px;
+      transition: 0.2s;
+    }
+
+    .game-card:hover .play-btn {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* Game Player View */
+    #player-view {
+      display: none;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo" onclick="goHome()">
+      <span>///</span> TIME-WASTER HUB
+    </div>
+    <button class="nav-btn" id="back-btn" onclick="goHome()">← Back to Hub</button>
+  </nav>
+
+  <main>
+    <!-- Homepage -->
+    <div id="home-view">
+      <div class="hero">
+        <h1>Productivity goes to die here.</h1>
+        <p>Select a micro-task and lose track of reality. More modules coming soon.</p>
+      </div>
+
+      <div class="game-grid">
+        <!-- Cyber Slice Card -->
+        <div class="game-card" style="--accent: var(--cyan);" onclick="launchGame('game-slice')">
+          <h2>Cyber Slice: Overdrive</h2>
+          <p>Infinite corporate task completion. Hack, extract, and auto-bot your way to maximum credits in this fast-paced incremental clicker.</p>
+          <div class="play-btn">INITIATE</div>
+        </div>
+
+        <!-- Untangle Card -->
+        <div class="game-card" style="--accent: var(--pink);" onclick="launchGame('game-untangle')">
+          <h2>Untangle the Earphones</h2>
+          <p>Physics-based puzzle agony. Drag nodes to uncross intersecting wires. Soothe your brain by creating perfect planar graphs.</p>
+          <div class="play-btn">INITIATE</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Player -->
+    <div id="player-view">
+      <iframe id="game-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+  </main>
+
+  <!-- GAME 1 TEMPLATE: Cyber Slice -->
+  <template id="game-slice">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>CYBER SLICE: Overdrive</title>
+      <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          user-select: none;
+        }
+
+        body {
+          background-color: #0b0e14;
+          color: #ffffff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          padding: 16px;
+        }
+
+        .game-container {
+          width: 100%;
+          max-width: 480px;
+          background: #111622;
+          border: 1px solid #1f2738;
+          border-radius: 12px;
+          padding: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .header {
+          background: #1c2230;
+          border: 1px solid #232936;
+          border-radius: 8px;
+          padding: 14px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .level-text {
+          color: #00ffcc;
+          font-weight: 700;
+          font-size: 15px;
+          letter-spacing: 0.5px;
+        }
+
+        .credits-text {
+          color: #ff007f;
+          font-weight: 700;
+          font-size: 15px;
+          letter-spacing: 0.5px;
+        }
+
+        .xp-bar-container {
+          width: 100%;
+          height: 12px;
+          background: #0b0e14;
+          border-radius: 6px;
+          overflow: hidden;
+          margin: 2px 0;
+        }
+
+        .xp-bar-fill {
+          height: 100%;
+          width: 0%;
+          background: #00ffcc;
+          box-shadow: 0 0 10px #00ffcc;
+          transition: width 0.15s ease-out;
+        }
+
+        .xp-label {
+          color: #8892b0;
+          font-size: 13px;
+        }
+
+        .combo-label {
+          color: #00ffcc;
+          font-size: 13px;
+          font-weight: 700;
+        }
+
+        .pop-banner {
+          min-height: 24px;
+          text-align: center;
+          font-size: 14px;
+          font-weight: 700;
+          transition: opacity 0.2s;
+        }
+
+        .task-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+
+        .task-card {
+          background: #1f2637;
+          border: 1px solid #2e384e;
+          border-radius: 8px;
+          padding: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+        }
+
+        .task-title {
+          font-size: 13px;
+          color: #a5b4fc;
+          font-weight: 600;
+        }
+
+        .action-btn {
+          border: none;
+          border-radius: 6px;
+          padding: 10px 0;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: transform 0.06s, filter 0.15s;
+        }
+
+        .action-btn:active {
+          transform: scale(0.96);
+          filter: brightness(1.2);
+        }
+
+        .footer {
+          background: #1c2230;
+          border: 1px solid #232936;
+          border-radius: 8px;
+          padding: 12px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .upgrade-btn {
+          background: #242c3f;
+          border: 1px solid #2e384e;
+          color: #ffffff;
+          border-radius: 6px;
+          padding: 8px 4px;
+          font-size: 11px;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          transition: background 0.15s, opacity 0.15s;
+        }
+
+        .upgrade-btn:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+
+        .upgrade-btn:not(:disabled):hover {
+          background: #2e384e;
+          border-color: #00ffcc;
+        }
+      </style>
+    </head>
+    <body>
+
+      <div class="game-container">
+        <div class="header">
+          <div class="row">
+            <span class="level-text" id="lvlText">LEVEL: 1</span>
+            <span class="credits-text" id="credText">CREDITS: 0</span>
+          </div>
+          <div class="xp-bar-container">
+            <div class="xp-bar-fill" id="xpBar"></div>
+          </div>
+          <div class="row">
+            <span class="xp-label" id="xpText">XP: 0 / 100</span>
+            <span class="combo-label" id="comboText">COMBO: x1.0</span>
+          </div>
+        </div>
+
+        <div class="pop-banner" id="popLabel"></div>
+
+        <div class="task-grid" id="taskGrid"></div>
+
+        <div class="footer">
+          <button class="upgrade-btn" id="upSpeed" onclick="buyUpgrade('speed')">
+            <span>⚡ Overclock</span>
+            <strong id="costSpeed">50 CR</strong>
+          </button>
+          <button class="upgrade-btn" id="upCrit" onclick="buyUpgrade('crit')">
+            <span>🎯 Crit Luck</span>
+            <strong id="costCrit">100 CR</strong>
+          </button>
+          <button class="upgrade-btn" id="upBot" onclick="buyUpgrade('bot')">
+            <span>🤖 Auto-Drone</span>
+            <strong id="costBot">250 CR</strong>
+          </button>
+        </div>
+      </div>
+
+      <script>
+        const state = {
+          level: 1,
+          xp: 0,
+          nextXp: 100,
+          credits: 0,
+          combo: 1.0,
+          lastClickTime: Date.now(),
+          overclock: 1.0,
+          critChance: 0.05,
+          drones: 0,
+          costs: { speed: 50, crit: 100, bot: 250 }
+        };
+
+        const tasks = [
+          { title: "Defuse Firewall", action: "CLEAR", color: "#ff007f", textDark: false },
+          { title: "Sync Data Core", action: "UPLOAD", color: "#00ffcc", textDark: true },
+          { title: "Wipe Traces", action: "PURGE", color: "#a855f7", textDark: false },
+          { title: "Mine Bit-Nodes", action: "EXTRACT", color: "#3b82f6", textDark: false },
+          { title: "Bypass Security", action: "HACK", color: "#eab308", textDark: false },
+          { title: "Decrypt Stream", action: "SOLVE", color: "#10b981", textDark: false }
+        ];
+
+        const gridEl = document.getElementById("taskGrid");
+        tasks.forEach(t => {
+          const card = document.createElement("div");
+          card.className = "task-card";
+          card.innerHTML = `
+            <span class="task-title">${t.title}</span>
+            <button class="action-btn" style="background: ${t.color}; color: ${t.textDark ? '#000000' : '#ffffff'};" onclick="completeTask(true)">
+              ${t.action}
+            </button>
+          `;
+          gridEl.appendChild(card);
+        });
+
+        let popTimer = null;
+        function showPop(text, color) {
+          const el = document.getElementById("popLabel");
+          el.textContent = text;
+          el.style.color = color;
+          clearTimeout(popTimer);
+          popTimer = setTimeout(() => {
+            if (el.textContent === text) el.textContent = "";
+          }, 800);
+        }
+
+        function completeTask(manual = true) {
+          const now = Date.now();
+          if (manual) {
+            if (now - state.lastClickTime < 1800) {
+              state.combo = Math.min(4.0, +(state.combo + 0.1).toFixed(1));
+            } else {
+              state.combo = 1.0;
+            }
+            state.lastClickTime = now;
+          }
+
+          const isCrit = Math.random() < state.critChance;
+          const multiplier = isCrit ? 3 : 1;
+
+          const gainedXp = Math.floor(15 * state.overclock * state.combo * multiplier);
+          const gainedCredits = Math.floor(10 * state.overclock * state.combo * multiplier);
+
+          state.xp += gainedXp;
+          state.credits += gainedCredits;
+
+          if (manual) {
+            const critText = isCrit ? " 🔥 CRIT HIT!" : "";
+            showPop(`+${gainedCredits} CR | +${gainedXp} XP${critText}`, isCrit ? "#ff007f" : "#00ffcc");
+          }
+
+          checkLevelUp();
+          updateUI();
+        }
+
+        function checkLevelUp() {
+          while (state.xp >= state.nextXp) {
+            state.xp -= state.nextXp;
+            state.level += 1;
+            state.nextXp = Math.floor(state.nextXp * 1.35);
+            showPop(`⚡ LEVEL UP! Tier ${state.level}`, "#eab308");
+          }
+        }
+
+        function buyUpgrade(type) {
+          const cost = state.costs[type];
+          if (state.credits >= cost) {
+            state.credits -= cost;
+            state.costs[type] = Math.floor(cost * 1.5);
+
+            if (type === "speed") state.overclock += 0.25;
+            if (type === "crit") state.critChance += 0.05;
+            if (type === "bot") state.drones += 1;
+
+            updateUI();
+          }
+        }
+
+        function updateUI() {
+          document.getElementById("lvlText").textContent = `LEVEL: ${state.level}`;
+          document.getElementById("credText").textContent = `CREDITS: ${state.credits}`;
+          document.getElementById("xpText").textContent = `XP: ${state.xp} / ${state.nextXp}`;
+          document.getElementById("comboText").textContent = `COMBO: x${state.combo.toFixed(1)}`;
+
+          const pct = Math.min(100, (state.xp / state.nextXp) * 100);
+          document.getElementById("xpBar").style.width = `${pct}%`;
+
+          const upSpeed = document.getElementById("upSpeed");
+          const upCrit = document.getElementById("upCrit");
+          const upBot = document.getElementById("upBot");
+
+          document.getElementById("costSpeed").textContent = `${state.costs.speed} CR`;
+          document.getElementById("costCrit").textContent = `${state.costs.crit} CR`;
+          document.getElementById("costBot").textContent = `${state.costs.bot} CR`;
+
+          upSpeed.disabled = state.credits < state.costs.speed;
+          upCrit.disabled = state.credits < state.costs.crit;
+          upBot.disabled = state.credits < state.costs.bot;
+        }
+
+        setInterval(() => {
+          if (Date.now() - state.lastClickTime > 1800 && state.combo > 1.0) {
+            state.combo = 1.0;
+            updateUI();
+          }
+
+          if (state.drones > 0) {
+            for (let i = 0; i < state.drones; i++) {
+              completeTask(false);
+            }
+          }
+        }, 1000);
+
+        updateUI();
+      </script>
+    </body>
+    </html>
+  </template>
+
+  <!-- GAME 2 TEMPLATE: Untangle -->
+  <template id="game-untangle">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Untangle The Earphones</title>
+      <style>
+        * { box-sizing: border-box; user-select: none; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body {
+          background: #0f111a; color: #fff; display: flex;
+          justify-content: center; align-items: center; min-height: 100vh; overflow: hidden;
+        }
+        #container {
+          width: 480px; height: 740px; background: #181c28; border-radius: 20px;
+          border: 2px solid #282f44; display: flex; flex-direction: column; position: relative;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden;
+        }
+        .header {
+          padding: 16px; background: #1f2535; border-bottom: 2px solid #282f44;
+          display: flex; flex-direction: column; gap: 8px;
+        }
+        .stat-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+        .stat-val { color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+        .progress-bg { width: 100%; height: 8px; background: #0f111a; border-radius: 4px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff007f, #00f0ff); transition: width 0.2s; }
+        
+        #canvas-wrap {
+          flex: 1; position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        canvas { background: transparent; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+
+        .footer {
+          padding: 14px; background: #1f2535; border-top: 2px solid #282f44;
+          display: flex; gap: 8px;
+        }
+        .up-btn {
+          flex: 1; background: #283147; border: 1px solid #3b4766; border-radius: 10px;
+          padding: 10px; color: #fff; font-size: 11px; cursor: pointer; text-align: center;
+          transition: 0.1s; display: flex; flex-direction: column; gap: 4px;
+        }
+        .up-btn:hover { background: #34405c; border-color: #00f0ff; }
+        .up-btn:active { transform: scale(0.96); }
+        .up-btn.disabled { opacity: 0.4; cursor: not-allowed; border-color: #3b4766; }
+
+        .pop {
+          position: absolute; pointer-events: none; font-weight: 900; font-size: 20px;
+          animation: floatUp 0.6s ease-out forwards; text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+        @keyframes floatUp {
+          0% { transform: translate(-50%, 0) scale(0.8); opacity: 1; }
+          100% { transform: translate(-50%, -40px) scale(1.2); opacity: 0; }
+        }
+      </style>
+    </head>
+    <body>
+
+    <div id="container">
+      <div class="header">
+        <div class="stat-row">
+          <span>LEVEL: <span class="stat-val" id="lvl-txt">1</span></span>
+          <span>CASH: <span class="stat-val" style="color:#ff007f" id="cash-txt">$0</span></span>
+        </div>
+        <div class="progress-bg">
+          <div class="progress-fill" id="xp-bar"></div>
+        </div>
+        <div class="stat-row" style="font-size: 12px; color: #8a99ad;">
+          <span>XP: <span id="xp-txt">0/100</span></span>
+          <span style="color:#ffd000" id="inter-txt">Knots Left: 0</span>
+        </div>
+      </div>
+
+      <div id="canvas-wrap">
+        <canvas id="gameCanvas" width="440" height="500"></canvas>
+      </div>
+
+      <div class="footer">
+        <button class="up-btn" id="btn-cash" onclick="buyUpgrade('cash')">
+          <span>💰 Cable Value</span>
+          <b style="color:#ff007f"><span id="cost-cash">30</span> CR</b>
+        </button>
+        <button class="up-btn" id="btn-shake" onclick="shakeUntangle()">
+          <span>📳 Panic Shake</span>
+          <b style="color:#ffd000">FREE</b>
+        </button>
+        <button class="up-btn" id="btn-bot" onclick="buyUpgrade('bot')">
+          <span>🤖 Auto-Puller</span>
+          <b style="color:#00f0ff"><span id="cost-bot">150</span> CR</b>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let state = {
+        lvl: 1, xp: 0, nextXp: 100, cash: 0,
+        cashMultiplier: 1.0, autoPullers: 0,
+        costs: { cash: 30, bot: 150 }
+      };
+
+      let nodes = [];
+      let edges = [];
+      let draggedNode = null;
+      let intersections = 0;
+      let isLevelTransitioning = false;
+
+      function initLevel() {
+        isLevelTransitioning = false;
+        nodes = [];
+        edges = [];
+        
+        const nodeCount = Math.min(10, 4 + Math.floor(state.lvl / 2));
+        const radius = 170;
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        const solvedPositions = [];
+        for (let i = 0; i < nodeCount; i++) {
+          const angle = (i / nodeCount) * Math.PI * 2;
+          solvedPositions.push({
+            x: cx + radius * Math.cos(angle),
+            y: cy + radius * Math.sin(angle)
+          });
+        }
+
+        for (let i = 0; i < nodeCount; i++) {
+          edges.push([i, (i + 1) % nodeCount]);
+          if (nodeCount > 5 && i % 2 === 0) {
+            edges.push([i, (i + 2) % nodeCount]);
+          }
+        }
+
+        nodes = solvedPositions.map((pos, idx) => {
+          return {
+            x: 60 + Math.random() * (canvas.width - 120),
+            y: 60 + Math.random() * (canvas.height - 120),
+            radius: idx === 0 ? 16 : 12,
+            type: idx === 0 ? 'jack' : (idx === 1 || idx === 2 ? 'earbud' : 'joint')
+          };
+        });
+
+        countIntersections();
+        updateUI();
+      }
+
+      function ccw(A, B, C) {
+        return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
+      }
+
+      function intersect(p1, p2, p3, p4) {
+        if (p1 === p3 || p1 === p4 || p2 === p3 || p2 === p4) return false;
+        return (ccw(p1, p3, p4) !== ccw(p2, p3, p4)) && (ccw(p1, p2, p3) !== ccw(p1, p2, p4));
+      }
+
+      function countIntersections() {
+        let count = 0;
+        for (let i = 0; i < edges.length; i++) {
+          for (let j = i + 1; j < edges.length; j++) {
+            const [u1, v1] = edges[i];
+            const [u2, v2] = edges[j];
+            if (intersect(nodes[u1], nodes[v1], nodes[u2], nodes[v2])) {
+              count++;
+            }
+          }
+        }
+        intersections = count;
+        return count;
+      }
+
+      function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top, rawX: clientX, rawY: clientY };
+      }
+
+      function startDrag(e) {
+        if (isLevelTransitioning) return;
+        const pos = getMousePos(e);
+        for (let n of nodes) {
+          const dx = pos.x - n.x;
+          const dy = pos.y - n.y;
+          if (Math.sqrt(dx * dx + dy * dy) < n.radius + 10) {
+            draggedNode = n;
+            break;
+          }
+        }
+      }
+
+      function doDrag(e) {
+        if (!draggedNode || isLevelTransitioning) return;
+        const pos = getMousePos(e);
+        draggedNode.x = Math.max(30, Math.min(canvas.width - 30, pos.x));
+        draggedNode.y = Math.max(30, Math.min(canvas.height - 30, pos.y));
+        
+        if (countIntersections() === 0) {
+          levelSolved(pos.rawX, pos.rawY);
+        }
+        updateUI();
+      }
+
+      function endDrag() { draggedNode = null; }
+
+      canvas.addEventListener('mousedown', startDrag);
+      window.addEventListener('mousemove', doDrag);
+      window.addEventListener('mouseup', endDrag);
+
+      canvas.addEventListener('touchstart', startDrag);
+      window.addEventListener('touchmove', doDrag);
+      window.addEventListener('touchend', endDrag);
+
+      function levelSolved(x, y) {
+        if (isLevelTransitioning) return;
+        isLevelTransitioning = true;
+
+        const gainedCash = Math.round(25 * state.lvl * state.cashMultiplier);
+        const gainedXp = 40;
+
+        state.cash += gainedCash;
+        state.xp += gainedXp;
+
+        showPop(x || window.innerWidth / 2, y || window.innerHeight / 2, `+$${gainedCash}`, "#ff007f");
+
+        if (state.xp >= state.nextXp) {
+          state.xp -= state.nextXp;
+          state.lvl++;
+          state.nextXp = Math.round(state.nextXp * 1.3);
+          showPop(window.innerWidth / 2, window.innerHeight / 2 - 40, "LEVEL UP! 🔥", "#ffd000");
+        }
+
+        setTimeout(initLevel, 800);
+      }
+
+      function shakeUntangle() {
+        if (isLevelTransitioning) return;
+        nodes.forEach(n => {
+          n.x += (Math.random() - 0.5) * 60;
+          n.y += (Math.random() - 0.5) * 60;
+          n.x = Math.max(40, Math.min(canvas.width - 40, n.x));
+          n.y = Math.max(40, Math.min(canvas.height - 40, n.y));
+        });
+        if (countIntersections() === 0) levelSolved();
+        updateUI();
+      }
+
+      function buyUpgrade(type) {
+        const cost = state.costs[type];
+        if (state.cash < cost) return;
+        state.cash -= cost;
+        state.costs[type] = Math.round(cost * 1.6);
+
+        if (type === 'cash') state.cashMultiplier += 0.5;
+        if (type === 'bot') state.autoPullers += 1;
+
+        updateUI();
+      }
+
+      function showPop(x, y, text, color) {
+        const pop = document.createElement('div');
+        pop.className = 'pop';
+        pop.innerText = text;
+        pop.style.left = `${x}px`;
+        pop.style.top = `${y}px`;
+        pop.style.color = color;
+        document.body.appendChild(pop);
+        setTimeout(() => pop.remove(), 600);
+      }
+
+      function updateUI() {
+        document.getElementById('lvl-txt').innerText = state.lvl;
+        document.getElementById('cash-txt').innerText = `$${state.cash}`;
+        document.getElementById('xp-txt').innerText = `${state.xp}/${state.nextXp}`;
+        document.getElementById('xp-bar').style.width = `${(state.xp / state.nextXp) * 100}%`;
+        document.getElementById('inter-txt').innerText = intersections === 0 ? "UNTANGLED! ✨" : `Knots: ${intersections}`;
+        document.getElementById('inter-txt').style.color = intersections === 0 ? "#00f0ff" : "#ff007f";
+
+        ['cash', 'bot'].forEach(u => {
+          const btn = document.getElementById(`btn-${u}`);
+          const costEl = document.getElementById(`cost-${u}`);
+          costEl.innerText = state.costs[u];
+          if (state.cash < state.costs[u]) {
+            btn.classList.add('disabled');
+          } else {
+            btn.classList.remove('disabled');
+          }
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const isSolved = intersections === 0;
+
+        edges.forEach(([u, v]) => {
+          const p1 = nodes[u];
+          const p2 = nodes[v];
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.lineWidth = isSolved ? 4 : 3;
+          ctx.strokeStyle = isSolved ? "#00f0ff" : "rgba(255, 255, 255, 0.4)";
+          ctx.shadowBlur = isSolved ? 12 : 0;
+          ctx.shadowColor = "#00f0ff";
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        });
+
+        nodes.forEach(n => {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+
+          if (n.type === 'jack') {
+            ctx.fillStyle = "#ffd000";
+          } else if (n.type === 'earbud') {
+            ctx.fillStyle = "#ff007f";
+          } else {
+            ctx.fillStyle = "#00f0ff";
+          }
+          
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#fff";
+          ctx.stroke();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      setInterval(() => {
+        if (state.autoPullers > 0 && !isLevelTransitioning) {
+          shakeUntangle();
+        }
+      }, 3000);
+
+      initLevel();
+      draw();
+    </script>
+    </body>
+    </html>
+  </template>
+
+  <!-- Core Hub Logic -->
+  <script>
+    const homeView = document.getElementById('home-view');
+    const playerView = document.getElementById('player-view');
+    const gameFrame = document.getElementById('game-frame');
+    const backBtn = document.getElementById('back-btn');
+
+    function launchGame(templateId) {
+      homeView.style.display = 'none';
+      playerView.style.display = 'flex';
+      backBtn.style.display = 'block';
+
+      const template = document.getElementById(templateId);
+      gameFrame.srcdoc = template.innerHTML;
+    }
+
+    function goHome() {
+      playerView.style.display = 'none';
+      homeView.style.display = 'block';
+      backBtn.style.display = 'none';
+      gameFrame.srcdoc = '';
+    }
+  </script>
+</body>
+</html>
